@@ -6,7 +6,6 @@ var library = {
 };
 
 var resizeLibrary = function () {
-    console.log('resizing library');
     var h = ($('#library').height()/ 5) - 10;
     var w = ($('#library').width() / 4) - 10;
     var size = Math.min(h, w);
@@ -17,14 +16,19 @@ var resizeLibrary = function () {
 }
 
 var addLibraryItemListeners = function (o) {
-    o.addEventListener('dragstart', function (e) {
-        e.dataTransfer.effectAllowed = 'copy';
-        e.dataTransfer.setData('id', this.id);
+    o.addEventListener('click', function (e) {
+        console.log(e);
+        console.log(o);
+        console.log(this)
+        var elem = document.getElementById(this.id)
+        if (elem.style['border-color']=='red'){
+            elem.style['border-color']='transparent';
+        } else {
+            elem.style['border-color']='red';
+        }
 
     });
-    o.addEventListener('dragend', function (e) {
 
-    });
 }
 
 var libImg = document.createElement("img");
