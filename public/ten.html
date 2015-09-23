@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Standard Automata</title>
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans&amp;amp;subset=latin">
+		<link rel="stylesheet" href="/css/ten.css">
+		<link rel="stylesheet" href="/css/font-awesome.min.css">
+	</head>
+	<body>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="share" class="form-inline">
+								<div class="form-group">
+									<input type="text" class="form-control" id="shareName" placeholder="type a name to share">
+								</div>
+								<button id="shareButton" class="btn btn-default">Share</button>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div id="drop">
+								<input id="dropUrl" type="text" value="" placeholder="paste url here"/>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<ul id="library">
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="movie">movie</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div id="controls">
+								<span id="audio-controls"></span>
+								<span id='current-time'>00:00</span>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<select id="videoSelector"></select>
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div id="timeline"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<ul>
+						<li>Get the images in the timeline to appear randomly in the movie area synchronized by the audio.</li>
+						<li>Get the "drop" section working - I imagine people will be able to drag in a file from their computer or enter a URL. doing so will copy the image to the "library"</li>
+						<li>Be able to "share" the video.</li>
+						<li>make the video look good in some way. this involves adding the text, transparency, effects, etc.</li>
+						<li>compile the videos to html5 somehow and build the vine like feed.</li>
+						<li>style the page so it looks better and works on mobile</li>
+						<li>get other content besides images/gifs to exist/work inside the library.</li>
+					</ul>
+				</div>
+			</div>
+		<footer class="footer">
+			<p>This is the end
+				<span class="pull-right">
+					<span>© 2015 Standard Automata - V 2.2.2r</span>
+				</span>
+			</p>
+		</footer>
+	</body>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/spin.min.js"></script>
+	<script src="/js/ten.js"></script>
+</html>
