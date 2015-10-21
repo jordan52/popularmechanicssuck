@@ -30,6 +30,7 @@ router.post('/videocheckpoint', function(req, res, next){
     req.app.videos.checkpoint();
     res.send(200);
 });
+
 router.get('/library', function(req, res, next){
     var library = {};
     var currentDir = './public/writable';
@@ -53,7 +54,33 @@ router.get('/library', function(req, res, next){
         res.json(library);
     });
 });
+router.get('/random_img_src', function(req, res, next){
+    //todo: this is a horrible copy/paste of the /library code. fix this.
 
+    var currentDir = './public/writable';
+    fs.readdir(currentDir, function (err, files) {
+        if (err) {
+            throw err;
+        }
+        var data = [];
+        files.forEach(function (file) {
+            try {
+                var isDirectory = fs.statSync(path.join(currentDir,file)).isDirectory();
+                if (!isDirectory) {
+                    data.push({ id : file, img: '/writable/'+file});
+                }
+            } catch(e) {
+                console.log(e);
+            }
+        });
+        data = _.sortBy(data, function(f) { return f.id });
+        console.dir(data)
+        randint = Math.floor(Math.random() * (data.length));
+        console.log('trying to return slot ' + randint);
+        console.dir(data[randint])
+        res.json(data[randint]);
+    });
+});
 whitelist = process.env.WHITELIST || []; // [/\.gov$/, /google\.com$/];
 delay = parseInt(process.env.DELAY) || 5000;
 mimeTypes = [

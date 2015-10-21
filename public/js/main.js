@@ -10,6 +10,23 @@ var getParameterByName = function(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
+var getRandom = function(id){
+    $('#' + id).attr("src", '/img/spinner_32.gif');
+    $.getJSON('/random_img_src/' + name, function(data) {
+        $('#' + id).attr("src", data.img);
+        alert('dont forget to update the local datastructure!');
+    });
+}
+
+var getFromUrl = function(id){
+    var location = encodeURIComponent($('#dropUrl_'+id).val());
+    $('#' + id).attr("src", '/img/spinner_32.gif');
+    $.getJSON('/proxy/' + location , function(data){
+        $('#dropUrl_'+id).val('');
+        $('#' + id).attr("src", data.img);
+        alert('dont forget to update the local datastructure!');
+    });
+}
 var resizeLibrary = function () {
     var h = ($('#library').height()/ 5) - 10;
     var w = ($('#library').width() / 4) - 10;
@@ -42,38 +59,59 @@ libContainer.className = 'libcontainer';
 var libImg = document.createElement("img");
 libImg.className = 'libimage';
 
+
 var libEdit = document.createElement("i");
-libEdit.className = 'fa fa-pencil-square-o fa-1';
+libEdit.className = 'fa fa-pencil fa-1 libedit';
+libEdit.setAttribute('data-original-title', "Modify!");
 
 var libItem = document.createElement("li");
 libItem.className = 'libitem';
 libItem.draggable = 'true';
 
 var addToLibrary = function(item){
+    //add item to library datastructure
     library.items.push(item);
+
     var frag = document.createDocumentFragment();
     var im = libImg.cloneNode();
     im.src = item.img;
     im.id = item.id;
-
-    var edit = libEdit.cloneNode();
-
     if(item.selected){
         im.style['border-color']='red';
     }
+
+    var edit = libEdit.cloneNode();
+    edit.id = 'edit_' +item.id
+
+    var editContent = "<button onClick='getRandom(\"" + item.id +"\")'>Get Random</button><br>" +
+        " or paste the url of a gif<br>" +
+        "<div class='input-group'> " +
+        "  <div class='input-group-addon'>URL</div> " +
+        "  <input id='dropUrl_" + item.id +"' type='text' class='form-control' aria-label='URL'> " +
+        "  <span class='input-group-addon'><a onClick='getFromUrl(\"" + item.id +"\")' class='glyphicon glyphicon-chevron-right'></a></span>" +
+        "</div><br>" +
+
+        "<button data-dismiss='clickover' >Done</button>"
+
+
+    edit.setAttribute('data-content', editContent);
+
+
+    // create the div that holds the image and edit icon and add them
+    var cont = libContainer.cloneNode();
+    cont.appendChild(im);
+    cont.appendChild(edit);
+
+    // create an li and add it to the fragment.
     var li = libItem.cloneNode();
-    li.appendChild(im);
-    li.appendChild(edit);
+    li.appendChild(cont)
     frag.appendChild(li);
     addLibraryItemListeners(im);
+
+    //add the li to the library.
     $('#library').append(frag);
 
-    var options = {
-        trigger: 'click',
-        title: 'hello',
-        content: 'craaaaap'
-    }
-    $('#'+item.id).popover(options);
+    $('#'+'edit_' +item.id).clickover({html:true, width: 400});
 };
 
 var initLibrary = function(name) {
@@ -149,7 +187,7 @@ var initAudio = function(){
 }
 
 var initBootstrap = function(){
-    $('[data-toggle="popover"]').popover();
+
 }
 
 $(function () {
