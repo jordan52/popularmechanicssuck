@@ -5,6 +5,12 @@ var library = {
     ]
 };
 
+var share = function(){
+    var jqxhr = $.post('/videoshare/', library, "json")
+        .done(function(data){alert('success');})
+        .fail(function(data){alert('failed');});
+}
+
 var getParameterByName = function(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -14,7 +20,8 @@ var getRandom = function(id){
     $('#' + id).attr("src", '/img/spinner_32.gif');
     $.getJSON('/random_img_src/' + name, function(data) {
         $('#' + id).attr("src", data.img);
-        alert('dont forget to update the local datastructure!');
+        _.find(library.items,{id: id}).img = data.img;
+        console.dir(library.items);
     });
 }
 
@@ -24,7 +31,8 @@ var getFromUrl = function(id){
     $.getJSON('/proxy/' + location , function(data){
         $('#dropUrl_'+id).val('');
         $('#' + id).attr("src", data.img);
-        alert('dont forget to update the local datastructure!');
+        _.find(library.items,{id: id}).img = data.img;
+        console.dir(library.items);
     });
 }
 var resizeLibrary = function () {
@@ -90,12 +98,9 @@ var addToLibrary = function(item){
         "  <input id='dropUrl_" + item.id +"' type='text' class='form-control' aria-label='URL'> " +
         "  <span class='input-group-addon'><a onClick='getFromUrl(\"" + item.id +"\")' class='glyphicon glyphicon-chevron-right'></a></span>" +
         "</div><br>" +
-
         "<button data-dismiss='clickover' >Done</button>"
 
-
     edit.setAttribute('data-content', editContent);
-
 
     // create the div that holds the image and edit icon and add them
     var cont = libContainer.cloneNode();
