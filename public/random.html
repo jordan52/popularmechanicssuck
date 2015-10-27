@@ -3,28 +3,24 @@
 <html>
 <head>
     <title>POPULAR MECHANICS (a band) SUCKS</title>
-    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans&amp;amp;subset=latin">
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans&amp;amp;subset=latin">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
     <link rel="stylesheet" href="/css/ten.css">
     <link rel="stylesheet" href="/css/font-awesome.min.css">
 </head>
 <body>
+<div id="pixelSize"></div>
+<div id="speed"></div>
+<div>
 <canvas id="canvas1" width="100%" height="100%">
 Random Canvas
 </canvas>
-
-
-<footer class="footer">
-</footer>
+</div>
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 <script type="text/javascript">
-    function setPixel(imageData, x, y, r, g, b, a) {
-        index = (x + y * imageData.width) * 4;
-        imageData.data[index+0] = r;
-        imageData.data[index+1] = g;
-        imageData.data[index+2] = b;
-        imageData.data[index+3] = a;
-    }
+
 
     var element = document.getElementById('canvas1'),
     c = element.getContext('2d');
@@ -32,47 +28,67 @@ Random Canvas
     // resize the canvas to fill browser window dynamically
     window.addEventListener('resize', resizeCanvas, false);
 
-    var goRand = function() {
-        //element = document.getElementById("canvas1");
-        //c = element.getContext("2d");
+    var MAX_SPEED = 1000;
+    var SPEED = 1000;
+    var TIMER = undefined;
 
-        // read the width and height of the canvas
+    var updateSpeed = function(){
+        var SPEED = MAX_SPEED - $( "#speed").slider( "values", 0 );
+        console.log(SPEED)
+        if(TIMER){
+            clearInterval(TIMER);
+        }
+        TIMER = setInterval(goRand, SPEED);
+    }
+
+    var goRand = function() {
+        var pSize = $( "#pixelSize").slider( "values", 0 );
         width = element.width;
         height = element.height;
 
-        // create a new pixel array
-        imageData = c.createImageData(width, height);
-
         // draw random dots
-        for (i = 0; i < (width*height); i++) {
-            x = Math.random() * width | 0; // |0 to truncate to Int32
-            y = Math.random() * height | 0;
-            r = Math.random() * 256 | 0;
-            g = Math.random() * 256 | 0;
-            b = Math.random() * 256 | 0;
-            setPixel(imageData, x, y, r, g, b, 255); // 255 opaque
+        for (y = 0; y < height; y+=pSize) {
+            for(x = 0; x < width; x+=pSize){
+                r = Math.random() * 256 | 0;
+                g = Math.random() * 256 | 0;
+                b = Math.random() * 256 | 0;
+                c.fillStyle = "rgb("+r+","+g+","+b+")";
+                c.fillRect(x,y,x+pSize,y+pSize);
+            }
         }
 
-        // copy the image data back onto the canvas
-        c.putImageData(imageData, 0, 0); // at coords 0,0
     }
-    function drawStuff() {
-        setInterval(goRand, 1000);
-    }
+
     function resizeCanvas() {
         element.width = window.innerWidth;
-        element.height = window.innerHeight;
+        element.height = window.innerHeight-34;
 
-        /**
-         * Your drawings need to be inside this function otherwise they will be reset when
-         * you resize the browser window and the canvas goes will be cleared.
-         */
-        drawStuff();
     }
 
-
     $(function () {
-        resizeCanvas();
+        $(function() {
+            $( "#pixelSize" ).slider({
+                max: 50,
+                min: 5,
+                step: 1,
+                value: 10,
+                change: function( event, ui ) { resizeCanvas();}
+            });
+            resizeCanvas();
+        });
+        $(function() {
+            $( "#speed" ).slider({
+                max: MAX_SPEED,
+                min: 100,
+                step: 1,
+                value: 500,
+                change: function( event, ui ) { updateSpeed();}
+            });
+            updateSpeed();
+        });
+
+
+
     });
 </script>
 </html>
