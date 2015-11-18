@@ -64,13 +64,22 @@ var addLibraryItemListeners = function (o) {
 var libContainer = document.createElement("div");
 libContainer.className = 'libcontainer';
 
+var imgContainer = document.createElement("div");
+imgContainer.className = 'imgcontainer';
+
 var libImg = document.createElement("img");
 libImg.className = 'libimage';
 
+var contContainer = document.createElement("div");
+contContainer.className = 'contcontainer';
 
 var libEdit = document.createElement("i");
 libEdit.className = 'fa fa-pencil fa-1 libedit';
 libEdit.setAttribute('data-original-title', "Modify!");
+
+var libRefresh = document.createElement("i");
+libRefresh.className = 'fa fa-refresh fa-1 librefresh';
+libRefresh.setAttribute('data-original-title', "Refresh!");
 
 var libItem = document.createElement("li");
 libItem.className = 'libitem';
@@ -100,16 +109,31 @@ var addToLibrary = function(item){
         "</div><br>" +
         "<button data-dismiss='clickover' >Done</button>"
 
+    var refresh = libRefresh.cloneNode();
+    refresh.id = 'refresh_' +item.id
+
+    refresh.onclick = function(){
+        getRandom( item.id );
+    }
+
     edit.setAttribute('data-content', editContent);
 
     // create the div that holds the image and edit icon and add them
-    var cont = libContainer.cloneNode();
-    cont.appendChild(im);
+    var container = libContainer.cloneNode();
+
+    var imgcontainer = imgContainer.cloneNode();
+    imgcontainer.appendChild(im);
+
+
+    var cont = contContainer.cloneNode();
     cont.appendChild(edit);
+    cont.appendChild(refresh);
+    container.appendChild(imgcontainer);
+    container.appendChild(cont);
 
     // create an li and add it to the fragment.
     var li = libItem.cloneNode();
-    li.appendChild(cont)
+    li.appendChild(container)
     frag.appendChild(li);
     addLibraryItemListeners(im);
 
