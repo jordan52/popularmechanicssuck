@@ -29,9 +29,13 @@ exports = module.exports = function (app){
         saveVideo : function (v){
             //TODO: scrub input here!
             console.log('TODO: scrub input in video.saveVideo before you push it onto the struct');
-            //TODO: DO NOT JUST PUSH. go thru the struct and replace the videos as necessary
-            console.log('ODO: DO NOT JUST PUSH. go thru the struct and replace the videos as necessary');
-            app.locals.videos.push(v);
+
+            // overwrite if exists
+            _.extend(_.findWhere(app.locals.videos, {name: v.name}), v);
+            // if it is still not in there, you need to push it on the end.
+            if(! _.findWhere(app.locals.videos, {name: v.name})) {
+                app.locals.videos.push(v);
+            }
         },
         checkpoint : function(){
             try {

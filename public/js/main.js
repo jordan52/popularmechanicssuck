@@ -21,7 +21,10 @@ var share = function(){
             contentType: "application/json"
 
         });
-        jqxhr.done( function(data){$('#share').click();});
+        jqxhr.done( function(data){
+            $('#share').click(); //dismiss
+            initShare(); //the video name changed.
+        });
         jqxhr.fail(function(jqxhr, status){alert('failed' + status);});
 
     } else {

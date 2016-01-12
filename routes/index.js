@@ -23,9 +23,6 @@ router.get('/videonames', function(req, res, next) {
     return res.json(req.app.videos.getVideoNames());
 });
 router.post('/videoshare', function(req, res, next){
-    console.log('trying to save this');
-    console.log(req.body);
-
     req.app.videos.saveVideo(req.body);
     res.send(200);
 });
