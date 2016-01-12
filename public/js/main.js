@@ -255,16 +255,34 @@ var initAudio = function(){
     document.querySelector('#audio-controls').appendChild(audio);
 }
 
-
-var initBootstrap = function(){
-
-}
+var initVideoSelector = function(init) {
+    $('#videoSelector').on('change', function(){
+        var name = $( "#videoSelector option:selected").text();
+        window.location.search = "&video=" + name;
+        /*var url = window.location.href;
+        if (url.indexOf('?') > -1){
+            url += '&video='
+        }else{
+            url += '?video='
+        }
+        window.location.href = url + name;
+*/
+        return false;
+    });
+    $.getJSON('/videonames', function(data){
+        $('#videoSelector').empty();
+        $('#videoSelector').append($('<option>').text('chose a video to load').attr('value', ''));
+        for(var i = 0 ; i < data.length; i++){
+            $('#videoSelector').append($('<option>').text(data[i]).attr('value', data[i]));
+        }
+    });
+};
 
 $(function () {
     initAreas();
+    initVideoSelector();
     var vName = getParameterByName('video');
     initVideo(vName? vName: 'default');
     initAudio();
     initAreas();
-    initBootstrap();
 });
