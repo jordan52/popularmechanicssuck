@@ -4,7 +4,6 @@ var fs      = require('fs');
 exports = module.exports = function (app){
 
     fs.readFile('./public/writable/videos.json', 'utf8', function (err, data) {
-        //app.locals.videos = JSON.parse(data);
         console.log(data);
         app.locals.videos = JSON.parse(data);
     });
@@ -29,6 +28,9 @@ exports = module.exports = function (app){
         },
         saveVideo : function (v){
             //TODO: scrub input here!
+            console.log('TODO: scrub input in video.saveVideo before you push it onto the struct');
+            //TODO: DO NOT JUST PUSH. go thru the struct and replace the videos as necessary
+            console.log('ODO: DO NOT JUST PUSH. go thru the struct and replace the videos as necessary');
             app.locals.videos.push(v);
         },
         checkpoint : function(){
@@ -37,7 +39,6 @@ exports = module.exports = function (app){
             } catch (err) {
                 throw Error('unable to stringify videos');
             }
-
             fs.writeFile('./public/writable/videos.json', str)
         }
     }

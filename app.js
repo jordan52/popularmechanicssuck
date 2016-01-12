@@ -73,5 +73,4 @@ app.use(function(err, req, res, next) {
 //this crawls the persist folder and sets up the videos module
 app.videos = videos(app)
 
-
 module.exports = app;

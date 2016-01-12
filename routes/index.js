@@ -23,6 +23,9 @@ router.get('/videonames', function(req, res, next) {
     return res.json(req.app.videos.getVideoNames());
 });
 router.post('/videoshare', function(req, res, next){
+    console.log('trying to save this');
+    console.log(req.body);
+
     req.app.videos.saveVideo(req.body);
     res.send(200);
 });
@@ -55,8 +58,8 @@ router.get('/library', function(req, res, next){
     });
 });
 router.get('/random_img_src', function(req, res, next){
-    //todo: this is a horrible copy/paste of the /library code. fix this.
-
+    //TODO: this is a horrible copy/paste of the /library code above. fix this.
+    console.log('TODO: this is a horrible copy/paste of the /library code above. fix this.');
     var currentDir = './public/writable';
     fs.readdir(currentDir, function (err, files) {
         if (err) {

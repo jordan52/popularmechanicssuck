@@ -1,14 +1,47 @@
 var ITEM_COUNT = 20;
 
-var library = {
+var video = {
     items: [
     ]
 };
 
+
 var share = function(){
-    var jqxhr = $.post('/videoshare/', library, "json")
-        .done(function(data){alert('success');})
-        .fail(function(data){alert('failed');});
+    var name = $('#share-name').val();
+    var errorMessage = 'ENTER A NAME!';
+    if(!name){
+        $('#share-name').val( errorMessage);
+    } else if (! (name == errorMessage) && !(name == 'default') ) {
+        console.log('sharing as' + name);
+        video.name = name;
+        var jqxhr = $.ajax({
+            type: "POST",
+            url:'/videoshare/',
+            data: JSON.stringify(video),
+            contentType: "application/json"
+
+        });
+        jqxhr.done( function(data){$('#share').click();});
+        jqxhr.fail(function(jqxhr, status){alert('failed' + status);});
+
+    } else {
+        alert('use a different name');
+    }
+}
+
+var initShare = function(){
+
+    var share = document.querySelector('#share');
+    var shareContent = " type the name of the video here <br>" +
+        "<div class='input-group'> " +
+        "  <div class='input-group-addon'>NAME</div> " +
+        "  <input id='share-name' type='text' class='form-control' aria-label='NAME' value='" + video.name + "'> " +
+        "  <span class='input-group-addon'><a onClick='share()' class='glyphicon glyphicon-save'></a></span>" +
+        "</div><br>" +
+        "<button data-dismiss='clickover' >Exit</button>"
+
+    share.setAttribute('data-content', shareContent);
+    $('#share').clickover({html:true, width: 400});
 }
 
 var getParameterByName = function(name) {
@@ -20,8 +53,8 @@ var getRandom = function(id){
     $('#' + id).attr("src", '/img/spinner_32.gif');
     $.getJSON('/random_img_src/' + name, function(data) {
         $('#' + id).attr("src", data.img);
-        _.find(library.items,{id: id}).img = data.img;
-        console.dir(library.items);
+        _.find(video.items,{id: id}).img = data.img;
+        console.dir(video.items);
     });
 }
 
@@ -31,29 +64,29 @@ var getFromUrl = function(id){
     $.getJSON('/proxy/' + location , function(data){
         $('#dropUrl_'+id).val('');
         $('#' + id).attr("src", data.img);
-        _.find(library.items,{id: id}).img = data.img;
-        console.dir(library.items);
+        _.find(video.items,{id: id}).img = data.img;
+        console.dir(video.items);
     });
 }
-var resizeLibrary = function () {
-    var h = ($('#library').height()/ 5) - 10;
-    var w = ($('#library').width() / 4) - 10;
+var resizeVideo = function () {
+    var h = ($('#video').height()/ 5) - 10;
+    var w = ($('#video').width() / 4) - 10;
     var size = Math.min(h, w);
-    $('.libitem').height(size);
-    $('.libitem').width(size);
-    $('.libimage').height(size);
-    $('.libimage').width(size);
+    $('.viditem').height(size);
+    $('.viditem').width(size);
+    $('.vidimage').height(size);
+    $('.vidimage').width(size);
 }
 
-var addLibraryItemListeners = function (o) {
+var addVideoItemListeners = function (o) {
     o.addEventListener('click', function (e) {
         var elem = document.getElementById(this.id)
         if (elem.style['border-color']=='red'){
             elem.style['border-color']='transparent';
-            _.find(library.items,{id: this.id}).selected = false;
+            _.find(video.items,{id: this.id}).selected = false;
         } else {
             elem.style['border-color']='red';
-            _.find(library.items,{id: this.id}).selected = true;
+            _.find(video.items,{id: this.id}).selected = true;
         }
     });
     //o.addEventListener('dblclick', function (e) {
@@ -61,43 +94,43 @@ var addLibraryItemListeners = function (o) {
     //});
 }
 
-var libContainer = document.createElement("div");
-libContainer.className = 'libcontainer';
+var vidContainer = document.createElement("div");
+vidContainer.className = 'vidcontainer';
 
 var imgContainer = document.createElement("div");
 imgContainer.className = 'imgcontainer';
 
-var libImg = document.createElement("img");
-libImg.className = 'libimage';
+var vidImg = document.createElement("img");
+vidImg.className = 'vidimage';
 
 var contContainer = document.createElement("div");
 contContainer.className = 'contcontainer';
 
-var libEdit = document.createElement("i");
-libEdit.className = 'fa fa-pencil fa-1 libedit';
-libEdit.setAttribute('data-original-title', "Modify!");
+var vidEdit = document.createElement("i");
+vidEdit.className = 'fa fa-pencil fa-1 videdit';
+vidEdit.setAttribute('data-original-title', "Modify!");
 
-var libRefresh = document.createElement("i");
-libRefresh.className = 'fa fa-refresh fa-1 librefresh';
-libRefresh.setAttribute('data-original-title', "Refresh!");
+var vidRefresh = document.createElement("i");
+vidRefresh.className = 'fa fa-refresh fa-1 vidrefresh';
+vidRefresh.setAttribute('data-original-title', "Refresh!");
 
-var libItem = document.createElement("li");
-libItem.className = 'libitem';
-libItem.draggable = 'true';
+var vidItem = document.createElement("li");
+vidItem.className = 'viditem';
+vidItem.draggable = 'true';
 
-var addToLibrary = function(item){
-    //add item to library datastructure
-    library.items.push(item);
+var addToVideo = function(item){
+    //add item to video datastructure
+    video.items.push(item);
 
     var frag = document.createDocumentFragment();
-    var im = libImg.cloneNode();
+    var im = vidImg.cloneNode();
     im.src = item.img;
     im.id = item.id;
     if(item.selected){
         im.style['border-color']='red';
     }
 
-    var edit = libEdit.cloneNode();
+    var edit = vidEdit.cloneNode();
     edit.id = 'edit_' +item.id
 
     var editContent = "<button onClick='getRandom(\"" + item.id +"\")'>Get Random</button><br>" +
@@ -109,17 +142,17 @@ var addToLibrary = function(item){
         "</div><br>" +
         "<button data-dismiss='clickover' >Done</button>"
 
-    var refresh = libRefresh.cloneNode();
+    edit.setAttribute('data-content', editContent);
+
+    var refresh = vidRefresh.cloneNode();
     refresh.id = 'refresh_' +item.id
 
     refresh.onclick = function(){
         getRandom( item.id );
     }
 
-    edit.setAttribute('data-content', editContent);
-
     // create the div that holds the image and edit icon and add them
-    var container = libContainer.cloneNode();
+    var container = vidContainer.cloneNode();
 
     var imgcontainer = imgContainer.cloneNode();
     imgcontainer.appendChild(im);
@@ -132,24 +165,28 @@ var addToLibrary = function(item){
     container.appendChild(cont);
 
     // create an li and add it to the fragment.
-    var li = libItem.cloneNode();
+    var li = vidItem.cloneNode();
     li.appendChild(container)
     frag.appendChild(li);
-    addLibraryItemListeners(im);
+    addVideoItemListeners(im);
 
-    //add the li to the library.
-    $('#library').append(frag);
+    //add the li to the video.
+    $('#video').append(frag);
 
     $('#'+'edit_' +item.id).clickover({html:true, width: 400});
 };
 
-var initLibrary = function(name) {
+var initVideo = function(name) {
     $.getJSON('/videos/' + name, function(data){
         for(i=0; i < data.items.length && i<ITEM_COUNT ;i++) {
-            addToLibrary(data.items[i]);
+            video.name = data.name;
+            video.user = data.user;
+            addToVideo(data.items[i]);
         }
+        resizeVideo();
+        initShare();
     });
-    resizeLibrary();
+
 };
 
 var initAreas = function(){
@@ -164,13 +201,13 @@ var initAreas = function(){
     var playPix = (movieHeight / 4) + 'px'
 
     $('#movie').height(movieHeight);
-    $('#library').height((2 * third));
+    $('#video').height((2 * third));
     $('#drop').height(sixth);
 
     //adjust the size of the playbutton
     $('#playgliph').css({'min-height': moviePix, 'line-height': moviePix, 'font-size': playPix,'text-align': 'center', color: '#216DD1'});
 
-    resizeLibrary();
+    resizeVideo();
 };
 window.onresize = function() {
     initAreas();
@@ -215,6 +252,7 @@ var initAudio = function(){
     document.querySelector('#audio-controls').appendChild(audio);
 }
 
+
 var initBootstrap = function(){
 
 }
@@ -222,7 +260,7 @@ var initBootstrap = function(){
 $(function () {
     initAreas();
     var vName = getParameterByName('video');
-    initLibrary(vName? vName: 'default');
+    initVideo(vName? vName: 'default');
     initAudio();
     initAreas();
     initBootstrap();

@@ -2,21 +2,5 @@
 <project version="4">
   <component name="IdProvider" IDEtalkID="E327DB09BB54C6CB27F1D1484AC47BD9" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" assert-keyword="true" jdk-15="true" />
-  <component name="masterDetails">
-    <states>
-      <state key="ProjectJDKs.UI">
-        <settings>
-          <last-edited>Python 3.4.0 virtualenv at ~/venv/crgo-custom-analytics</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-    </states>
-  </component>
 </project>
 
